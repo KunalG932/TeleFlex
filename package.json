@@ -1,0 +1,47 @@
+{
+  "name": "teleflex",
+  "version": "1.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "A flexible Telegraf helper library for creating dynamic help menus and module management",
+  "main": "src/teleflex.js",
+  "types": "src/teleflex.d.ts",
+  "scripts": {
+    "test": "node node_modules/jest/bin/jest.js --config jest.config.js",
+    "test:watch": "node node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node node_modules/jest/bin/jest.js --coverage",
+    "example": "node examples/basic.js"
+  },
+  "keywords": [
+    "telegram",
+    "telegraf",
+    "bot",
+    "menu",
+    "help",
+    "pagination"
+  ],
+  "author": "Kunal Gaikwad",
+  "license": "MIT",
+  "dependencies": {
+    "telegraf": "^4.12.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "@jest/globals": "^29.7.0",
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "babel-jest": "^29.7.0",
+    "@types/node": "^18.0.0",
+    "@types/jest": "^29.5.0",
+    "typescript": "^4.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kunalg932/teleflex.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kunalg932/teleflex/issues"
+  },
+  "homepage": "https://github.com/kunalg932/teleflex#readme"
+} 

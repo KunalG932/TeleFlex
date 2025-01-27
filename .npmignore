@@ -1,0 +1,35 @@
+# Tests
+tests/
+coverage/
+jest.config.js
+
+# Development files
+.gitignore
+.npmignore
+.github/
+.vscode/
+.idea/
+
+# Examples
+examples/
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Source maps
+*.map
+
+# TypeScript source
+*.ts
+!*.d.ts
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env*

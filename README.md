@@ -1,230 +1,196 @@
-## Teleflex
+# TeleFlex 🤖
 
-A flexible Telegraf helper library for creating dynamic help menus and module management for Telegram bots.
+A powerful and flexible Telegram bot framework built on top of [Telegraf](https://github.com/telegraf/telegraf). TeleFlex makes it easy to create modular, interactive Telegram bots with dynamic help menus, module management, and more.
 
-[![npm version](https://img.shields.io/npm/v/teleflex.svg)](https://www.npmjs.com/package/teleflex)
+[![npm version](https://badge.fury.io/js/teleflex.svg)](https://www.npmjs.com/package/teleflex)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Features
+## Features ✨
 
-- 📚 Automatic module discovery and loading
-- 📑 Paginated help menus with inline navigation
-- 🎨 Fully customizable texts and appearance
-- ⌨️ Dynamic inline keyboards
-- 🔄 Easy navigation between modules
-- 📦 TypeScript support
-- 🛡️ Built-in flood control
-- 🔄 Smart message update handling
-- 🚦 Rate limiting for button clicks
+- 📚 **Dynamic Help Menus**: Automatically generate interactive help menus from your modules
+- 🧩 **Module Management**: Organize your bot commands into modular components
+- 📱 **Interactive Commands**: Built-in support for inline keyboards and command pagination
+- 🚦 **Rate Limiting**: Protect your bot with built-in flood control
+- 🎨 **Customizable**: Easy to customize text messages, buttons, and behaviors
+- 📸 **Media Support**: Built-in support for photos, stickers, GIFs, and media albums
+- 🎮 **Game Support**: Create interactive games with state management
+- 🛠 **Utility Commands**: Common utility commands ready to use
 
-## Installation
+## Installation 📦
 
 ```bash
 npm install teleflex
 ```
 
-## Quick Start
+## Quick Start 🚀
+
+1. Create a new bot with [@BotFather](https://t.me/botfather) and get your bot token
+2. Create a new project and install TeleFlex:
+
+```bash
+mkdir my-telegram-bot
+cd my-telegram-bot
+npm init -y
+npm install teleflex dotenv
+```
+
+3. Create a basic bot (index.js):
 
 ```javascript
 const { Telegraf } = require('telegraf');
 const TeleFlex = require('teleflex');
+require('dotenv').config();
 
 // Initialize your bot
-const bot = new Telegraf('YOUR_BOT_TOKEN');
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 // Initialize TeleFlex
 const teleflex = new TeleFlex(bot, {
-  modulesPath: './modules',
-  buttonsPerPage: 6,
+    modulesPath: './modules',
+    buttonsPerPage: 5,
+    texts: {
+        helpMenuTitle: '🤖 Bot Commands',
+        helpMenuIntro: 'Available modules ({count}):\n{modules}'
+    }
 });
 
-// Setup the handlers
+// Set up handlers
 teleflex.setupHandlers();
 
-// Start the bot
-bot.launch();
-```
-
-## Creating Help Modules
-
-Create module files in your modules directory:
-
-```javascript
-// modules/admin.js
-const MODULE = 'Admin';
-const HELP = `
-**Admin Commands**:
-/ban - Ban a user
-/unban - Unban a user
-/mute - Mute a user
-/unmute - Unmute a user
-`;
-
-module.exports = { MODULE, HELP };
-```
-
-## Configuration Options
-
-```javascript
-const options = {
-  // Path to modules directory
-  modulesPath: './modules',
-
-  // Number of buttons per page
-  buttonsPerPage: 6,
-
-  // Module variable names
-  helpVar: 'HELP',
-  moduleVar: 'MODULE',
-
-  // Flood control (ms between actions)
-  floodWait: 1000,
-
-  // Customizable texts
-  texts: {
-    helpMenuTitle: '**🛠 Help Menu**',
-    helpMenuIntro: 'Available modules ({count}):\n{modules}\n\nTap a module to explore.',
-    moduleHelpTitle: '**🔍 {moduleName} Commands**',
-    moduleHelpIntro: '{helpText}',
-    noModulesLoaded: '⚠️ No modules available.',
-    backButton: '◀️ Back',
-    prevButton: '⬅️ Previous',
-    nextButton: '➡️ Next',
-    floodMessage: '⚠️ Please wait a moment before clicking again'
-  }
-};
-```
-
-## Error Handling
-
-TeleFlex includes built-in error handling for common scenarios:
-
-- 🔄 Message modification errors
-- ⏱️ Rate limiting for rapid clicks
-- 🚫 Invalid module requests
-- 📝 Message content validation
-
-## Rate Limiting
-
-To prevent spam and protect your bot:
-
-```javascript
-const teleflex = new TeleFlex(bot, {
-  floodWait: 1000, // 1 second between actions
-});
-```
-
-## API Reference
-
-### TeleFlex Class
-
-#### Constructor
-```javascript
-new TeleFlex(bot, options)
-```
-
-#### Methods
-
-- `showHelpMenu(ctx, page = 1)` - Display the help menu
-- `showModuleHelp(ctx, moduleName)` - Display help for a specific module
-- `setupHandlers()` - Setup all necessary bot handlers
-
-## Example Usage
-
-### Basic Bot with Help Menu
-
-```javascript
-const { Telegraf } = require('telegraf');
-const TeleFlex = require('teleflex');
-
-const bot = new Telegraf(process.env.BOT_TOKEN);
-
-const teleflex = new TeleFlex(bot, {
-  modulesPath: __dirname + '/modules',
-  buttonsPerPage: 6,
+// Add basic commands
+bot.command('start', ctx => {
+    ctx.reply('Welcome! Use /help to see available commands.');
 });
 
-teleflex.setupHandlers();
-
-// Add some basic commands
-bot.command('start', (ctx) => {
-  ctx.reply('Welcome! Use /help to see available commands.');
-});
-
+// Launch the bot
 bot.launch();
 
-// Enable graceful stop
+// Enable graceful shutdown
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
 ```
 
-### Custom Module Examples
+## Creating Modules 🧩
+
+Create modules in your modules directory. Each module should export `MODULE`, `HELP`, and `commands`:
 
 ```javascript
 // modules/utility.js
 const MODULE = 'Utility';
 const HELP = `
-**Utility Commands**:
-/search - Search in messages
-/translate - Translate text
-/calculate - Calculator
-/weather - Get weather info
-/remind - Set reminders
+🛠 *Utility Commands*
+
+/calc [expression] - Calculate mathematical expressions
+/time [timezone] - Get current time
+/weather [city] - Get weather information
 `;
 
-module.exports = { MODULE, HELP };
+const commands = {
+    calc: async (ctx) => {
+        const expr = ctx.message.text.split(' ').slice(1).join(' ');
+        try {
+            const result = eval(expr);
+            ctx.reply(`🔢 Result: ${result}`);
+        } catch (err) {
+            ctx.reply('❌ Invalid expression');
+        }
+    },
+    // ... other command implementations
+};
 
+module.exports = { MODULE, HELP, commands };
+```
+
+## Media Support 📸
+
+TeleFlex provides built-in support for handling media files. Define your media assets in your module:
+
+```javascript
 // modules/media.js
-const MODULE = 'Media';
-const HELP = `
-**Media Commands**:
-/photo - Send or edit photos
-/video - Send or compress videos
-/audio - Send voice or music
-/sticker - Create custom stickers
-/gif - Search and send GIFs
-`;
+const MEDIA = {
+    photos: [
+        {
+            file: 'welcome.jpg',
+            caption: '👋 Welcome!'
+        }
+    ],
+    stickers: ['sticker_file_id'],
+    gifs: ['gif_url'],
+    albumPhotos: [
+        {
+            file: 'album1.jpg',
+            caption: 'Photo 1'
+        }
+    ]
+};
 
-module.exports = { MODULE, HELP };
+const commands = {
+    photo: async (ctx) => {
+        const photo = MEDIA.photos[0];
+        await ctx.replyWithPhoto(
+            { source: photo.file },
+            { caption: photo.caption }
+        );
+    }
+    // ... other media commands
+};
+
+module.exports = { MODULE, HELP, commands, MEDIA };
 ```
 
-## TypeScript Support
+## Configuration Options ⚙️
 
-TeleFlex includes TypeScript definitions out of the box:
-
-```typescript
-import TeleFlex from 'teleflex';
-import { Telegraf } from 'telegraf';
-
-const bot = new Telegraf('BOT_TOKEN');
-const teleflex = new TeleFlex(bot, {
-  modulesPath: './modules'
-});
+```javascript
+const options = {
+    // Path to modules directory
+    modulesPath: './modules',
+    
+    // Number of buttons per page in menus
+    buttonsPerPage: 6,
+    
+    // Minimum time between actions (ms)
+    floodWait: 1000,
+    
+    // Custom command prefix
+    commandPrefix: '/',
+    
+    // Customizable text messages
+    texts: {
+        helpMenuTitle: '🤖 Help Menu',
+        helpMenuIntro: 'Available modules ({count}):\n{modules}',
+        moduleHelpTitle: '📚 {moduleName} Commands',
+        moduleHelpIntro: '{helpText}',
+        noModulesLoaded: '⚠️ No modules available',
+        backButton: '◀️ Back',
+        prevButton: '⬅️ Previous',
+        nextButton: '➡️ Next',
+        floodMessage: '⏳ Please wait'
+    }
+};
 ```
 
-## Contributing
+## Examples 📝
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature-feature`)
-5. Open a Pull Request
+Check out the [examples](./examples) directory for more examples including:
+- Basic bot setup
+- Utility commands
+- Interactive games
+- Media handling
+- And more!
 
-## Testing
+## Contributing 🤝
 
-Run the test suite:
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
-```bash
-npm test
-```
+## License 📄
 
-## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-MIT © [Kunal Gaikwad]
+## Support 💬
 
-## Support
+- Create an [issue](https://github.com/KunalG932/TeleFlex/issues) for bug reports and feature requests
+- Star ⭐ the repo if you find it useful!
 
-If you have any questions or need help, please:
-1. Check the [documentation](https://github.com/kunalg932/teleflex#readme)
-2. Open an [issue](https://github.com/kunalg932/teleflex/issues)
+## Author ✍️
 
+KunalG932 - [GitHub](https://github.com/KunalG932)
